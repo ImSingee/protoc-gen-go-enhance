@@ -93,28 +93,8 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m 
 		return
 	}
 
-	g.P("func (x *", m.GoIdent, ") Clone() *", m.GoIdent, "{")
-	g.P("return ", protoClone, "(x).(*", m.GoIdent, ")")
-	g.P("}")
-	g.P()
+	genForClone(gen, g, f, m)
+	genForEnsureNoNilMap(gen, g, f, m)
+	genForOneOf(gen, g, f, m)
 
-	for _, field := range m.Fields {
-		genMessageField(gen, g, f, m, field)
-	}
-}
-
-func genMessageField(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, field *protogen.Field) {
-	if oneof := field.Oneof; oneof != nil && !oneof.Desc.IsSynthetic() && field == oneof.Fields[0] {
-		for _, field := range oneof.Fields {
-			g.P("func (x *", m.GoIdent, ") Is", field.GoName, "() bool {")
-			g.P("switch x.", oneof.GoName, ".(type) {")
-			g.P("case *", field.GoIdent, ":")
-			g.P("return true")
-			g.P("default:")
-			g.P("return false")
-			g.P("}")
-			g.P("}")
-		}
-		g.P()
-	}
 }
