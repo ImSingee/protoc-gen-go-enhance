@@ -94,23 +94,7 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m 
 	}
 
 	g.P("func (x *", m.GoIdent, ") Clone() *", m.GoIdent, "{")
-
-	g.P("if x == nil { return &", m.GoIdent, "{} }")
-
-	g.P("cloned := ", protoClone, "(x).(*", m.GoIdent, ")")
-
-	for _, field := range m.Fields {
-		if field.Desc.IsMap() {
-			keyType, _ := fieldGoType(g, f, field.Message.Fields[0])
-			valType, _ := fieldGoType(g, f, field.Message.Fields[1])
-
-			g.P("if x.", field.GoName, " != nil && cloned.", field.GoName, " == nil {")
-			g.P("cloned.", field.GoName, " = map[", keyType, "]", valType, "{}")
-			g.P("}")
-		}
-	}
-
-	g.P("return cloned")
+	g.P("return ", protoClone, "(x).(*", m.GoIdent, ")")
 	g.P("}")
 	g.P()
 
