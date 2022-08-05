@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/types/pluginpb"
 )
@@ -9,7 +10,7 @@ var protoPackage = protogen.GoImportPath("google.golang.org/protobuf/proto")
 var protoClone = protogen.GoIdent{GoName: "Clone", GoImportPath: protoPackage}
 
 func main() {
-	protogen.Options{}.Run(func(gen *protogen.Plugin) error {
+	protogen.Options{ParamFunc: flag.CommandLine.Set}.Run(func(gen *protogen.Plugin) error {
 		for _, f := range gen.Files {
 			if f.Generate {
 				GenerateFile(gen, f)
@@ -96,5 +97,5 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m 
 	genForClone(gen, g, f, m)
 	genForEnsureNoNilMap(gen, g, f, m)
 	genForOneOf(gen, g, f, m)
-
+	genForJson(gen, g, f, m)
 }

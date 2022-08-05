@@ -1,8 +1,19 @@
 package main
 
-import "google.golang.org/protobuf/compiler/protogen"
+import (
+	"flag"
+	"google.golang.org/protobuf/compiler/protogen"
+)
+
+var (
+	enableEnsureNoNilMap = flag.Bool("enable_EnsureNoNilMap", true, "generate EnsureNoNilMap() method")
+)
 
 func genForEnsureNoNilMap(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+	if !*enableEnsureNoNilMap {
+		return
+	}
+
 	containMap := false
 	for _, field := range m.Fields {
 		if field.Desc.IsMap() {

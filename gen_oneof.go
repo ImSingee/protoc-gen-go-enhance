@@ -1,8 +1,18 @@
 package main
 
-import "google.golang.org/protobuf/compiler/protogen"
+import (
+	"flag"
+	"google.golang.org/protobuf/compiler/protogen"
+)
+
+var (
+	enableOneofIs = flag.Bool("enable_OneOf_IsXXX", true, "generate IsXXX() method for oneof field")
+)
 
 func genForOneOf(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+	if !*enableOneofIs {
+		return
+	}
 	for _, field := range m.Fields {
 		if oneof := field.Oneof; oneof != nil && !oneof.Desc.IsSynthetic() && field == oneof.Fields[0] {
 			for _, field := range oneof.Fields {

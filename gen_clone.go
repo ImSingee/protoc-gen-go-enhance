@@ -1,8 +1,18 @@
 package main
 
-import "google.golang.org/protobuf/compiler/protogen"
+import (
+	"flag"
+	"google.golang.org/protobuf/compiler/protogen"
+)
+
+var (
+	enableClone = flag.Bool("enable_Clone", true, "generate Clone() method")
+)
 
 func genForClone(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+	if !*enableClone {
+		return
+	}
 	if m.Desc.IsMapEntry() {
 		return
 	}
