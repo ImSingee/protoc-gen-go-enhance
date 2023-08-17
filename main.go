@@ -96,6 +96,7 @@ func genMessage(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo, m 
 
 	genForClone(gen, g, f, m)
 	genForNoNilClone(gen, g, f, m)
+	genForWith(gen, g, f, m)
 	genForIsNil(gen, g, f, m)
 	genForEnsureNoNilMap(gen, g, f, m)
 	genForOneOf(gen, g, f, m)
